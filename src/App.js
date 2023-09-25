@@ -5,32 +5,23 @@ import "./App.css";
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      name: "Ashraf",
-    };
+    this.state = { monsters: [] };
+  }
+  componentDidMount() {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((users) =>
+        this.setState(() => {
+          return { monsters: users };
+        })
+      );
   }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>{this.state.name}</p>
-          <button
-            onClick={() =>
-              this.setState(
-                () => {
-                  // console.log(this);
-                  return {
-                    name: "Ahmed",
-                  };
-                },
-                () => console.log(this)
-              )
-            }
-          >
-            Change Name
-          </button>
-        </header>
+        {this.state.monsters.map((monster) => (
+          <h1 key={monster.id}>{monster.name}</h1>
+        ))}
       </div>
     );
   }
