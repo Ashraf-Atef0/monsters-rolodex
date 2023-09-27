@@ -5,21 +5,39 @@ import "./App.css";
 class App extends Component {
   constructor() {
     super();
-    this.state = { monsters: [] };
+    this.state = { monsters: [], searchField: "" };
+    this.oldstate = this.state;
   }
   componentDidMount() {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((response) => response.json())
       .then((users) =>
         this.setState(() => {
+          this.oldstate = { monsters: users };
           return { monsters: users };
         })
       );
   }
+  updateSearchField = (event) => {
+    let searchField = event.target.value.toLowerCase();
+    this.setState(() => {
+      return { searchField };
+    });
+  };
   render() {
+    const { monsters, searchField } = this.state;
+    const { updateSearchField } = this;
+    let monstersList = monsters.filter((e) =>
+      e.name.toLowerCase().includes(searchField)
+    );
     return (
       <div className="App">
-        {this.state.monsters.map((monster) => (
+        <input
+          className="search"
+          placeholder="Search for a monster"
+          onChange={updateSearchField}
+        />
+        {monstersList.map((monster) => (
           <h1 key={monster.id}>{monster.name}</h1>
         ))}
       </div>
